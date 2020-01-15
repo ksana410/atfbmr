@@ -16,6 +16,11 @@ if [[ $(di -u) != "0" ]]; then
     printf "\e[42m\e[31mError: You must be root to run this install script.\e[0m\n"
     exit 1
 fi
+
+# if [ $(whoami) != 'root' ];then
+#    echo `date "+%Y/%m/%d %H:%M:%S> "` "必须用 root 账户执行此脚本！"
+#    exit
+#fi
    
 # 检测Linux发行版
 
@@ -63,3 +68,5 @@ check_sys(){
         fi
     fi
 }
+
+# 判断系统位数
