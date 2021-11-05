@@ -11,6 +11,9 @@
 # Version: 0.0.1 20200114
 # *创建日期，初始编写
 
+packageList=dnsmasq wget curl unzip
+
+
 # 检测是否是Root用户
 if [[ $(id -u) != "0" ]]; then
     printf "\e[42m\e[31m Error: You must be root to run this install script.\e[0m\n"
@@ -65,10 +68,22 @@ sysCheck(){
 }
 
 # 判断系统位数
+check_bit() {
+    linux_env=$(getconf LONG_BIT)
+    if [[ ${linux_env} -eq "32"]]
+    then
+        echo "This is a i686 system"
+    else
+        echo "This is a x86_64 system"
+    fi
+}
 
 # 生成配置文件
 
 # 安装必要组件
+install_pack() {
+    systemPackage install git
+}
 
 # 下载组件
 
