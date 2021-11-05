@@ -12,8 +12,8 @@
 # *创建日期，初始编写
 
 # 检测是否是Root用户
-if [[ $(di -u) != "0" ]]; then
-    printf "\e[42m\e[31mError: You must be root to run this install script.\e[0m\n"
+if [[ $(id -u) != "0" ]]; then
+    printf "\e[42m\e[31m Error: You must be root to run this install script.\e[0m\n"
     exit 1
 fi
 
@@ -22,50 +22,45 @@ fi
 #    exit
 #fi
    
-# 检测Linux发行版
-
-check_sys(){
-    local checkType=$1
-    local value=$2
-
-    local release=''
-    local systemPackage=''
-
-    if [[ -f /etc/redhat-release ]]; then
-        release="centos"
-        systemPackage="yum"
-    elif grep -Eqi "debian|raspbian" /etc/issue; then
-        release="debian"
-        systemPackage="apt"
-    elif grep -Eqi "ubuntu" /etc/issue; then
-        release="ubuntu"
-        systemPackage="apt"
-    elif grep -Eqi "centos|red hat|redhat" /etc/issue; then
-        release="centos"
-        systemPackage="yum"
-    elif grep -Eqi "debian|raspbian" /proc/version; then
-        release="debian"
-        systemPackage="apt"
-    elif grep -Eqi "ubuntu" /proc/version; then
-        release="ubuntu"
-        systemPackage="apt"
-    elif grep -Eqi "centos|red hat|redhat" /proc/version; then
-        release="centos"
-        systemPackage="yum"
-    fi
-
-    if [[ "${checkType}" == "sysRelease" ]]; then
-        if [ "${value}" == "${release}" ]; then
-            return 0
-        else
-            return 1
-        fi
-    elif [[ "${checkType}" == "packageManager" ]]; then
-        if [ "${value}" == "${systemPackage}" ]; then
-            return 0
-        else
-            return 1
-        fi
+# 检测Linux发行版及架构
+sysCheck(){
+    if [ -f /etc/os-release ]; then
+        # freedesktop.org and systemd
+        . /etc/os-release
+        MACHINE=$(uname -m)
+        OS=$NAME
+        VER=$VERSION_ID
+    elif type lsb_release >/dev/null 2>&1; then
+        # linuxbase.org
+        MACHINE=$(uname -m)
+        OS=$(lsb_release -si)
+        VER=$(lsb_release -sr)
+    elif [ -f /etc/lsb-release ]; then
+        # For some versions of Debian/Ubuntu without lsb_release command
+        . /etc/lsb-release
+        MACHINE=$(uname -m)
+        OS=$DISTRIB_ID
+        VER=$DISTRIB_RELEASE
+    elif [ -f /etc/debian_version ]; then
+        # Older Debian/Ubuntu/etc.
+        MACHINE=$(uname -m)
+        OS=Debian
+        VER=$(cat /etc/debian_version)
+    elif [ -f /etc/SuSe-release ]; then
+        # Older SuSE/etc.
+        MACHINE=$(uname -m)
+        OS=SuSE
+        VER=$(cat /etc/SuSe-release)
+    elif [ -f /etc/redhat-release ]; then
+        # Older Red Hat, CentOS, etc.
+        MACHINE=$(uname -m)
+        OS=RedHat
+        VER=$(cat /etc/redhat-release)
+    else
+        # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+        MACHINE=$(uname -m)
+        OS=$(uname -s)
+        VER=$(uname -r)
     fi
 }
 
