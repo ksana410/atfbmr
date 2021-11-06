@@ -11,10 +11,27 @@
 # Version: 0.0.1 20200114
 # *创建日期，初始编写
 
+# 前期安装说明，为了减少冲突，建议使用纯净安装后的Linux发行版作为母体系统进行安装
+echo "${Yellow}################################################################${Reset}"
+echo "${Yellow}#                                                              #${Reset}"
+echo "${Yellow}# This is a router installation for Linux                      #${Reset}"
+echo "${Yellow}# Version: 0.0.1 20200114                                      #${Reset}"
+echo "${Yellow}# Author: Ksana410                                             #${Reset}"
+echo "${Yellow}# Website: https://Ksana410.github.io                          #${Reset}"
+echo "${Yellow}#                                                              #${Reset}"
+echo "${Yellow}################################################################${Reset}"
+echo "${Red}----------------------------------------------------------------${Reset}"
+echo "${Red}To avoid unnecessary conflicts, it is recommended to use a      ${Reset}"
+echo "${Red}pure installation of Linux for operation                        ${Reset}"
+echo "${Red}----------------------------------------------------------------${Reset}"
+
+
+
 # 初始化变量
 OS=''
 VER=''
 MACHINE=''
+PKM=''
 
 # 网络参数
 NET_NAME_TYPE=''
@@ -28,6 +45,15 @@ LANNET_GATEWAY=''
 DEFAULT_VLAN=''
 KERNEL_VERSION=''
 
+# 颜色输出
+Red=$(tput setaf 1)
+Green=$(tput setaf 2)
+Yellow=$(tput setaf 3)
+Blue=$(tput setaf 4)
+Purple=$(tput setaf 5)
+Reset=$(tput sgr0)
+
+# 依赖包
 packageList=(dnsmasq wget curl unzip)
 
 # 检测是否是Root用户
@@ -41,50 +67,44 @@ fi
 #    exit
 #fi
    
-# 检测Linux发行版及架构
+# 检测Linux发行版及架构，主要测试Debian,Ubuntu,CentOS,RedHat,Alpine,Rocky，其他发行版暂不支持，做出相应的警告并自动退出，支持的系统测试包管理器类型
 sysCheck(){
-    echo -e "\033[31m Checking System... \033[0m"
-    if [[ -z $OS ]] || [[ -z $VER ]]; then
-        MACHINE=$(uname -m)
-        if [ -f /etc/os-release ]; then
-            # freedesktop.org and systemd
-            . /etc/os-release
-            OS=$NAME
-            VER=$VERSION_ID
-        elif type lsb_release >/dev/null 2>&1; then
-            # linuxbase.org
-            OS=$(lsb_release -si)
-            VER=$(lsb_release -sr)
-        elif [ -f /etc/lsb-release ]; then
-            # For some versions of Debian/Ubuntu without lsb_release command
-            . /etc/lsb-release
-            OS=$DISTRIB_ID
-            VER=$DISTRIB_RELEASE
-        elif [ -f /etc/debian_version ]; then
-            # Older Debian/Ubuntu/etc.
-            OS=Debian
-            VER=$(cat /etc/debian_version)
-        elif [ -f /etc/rocky-release ]; then
-            # For Rocky Linux
-            OS=Rocky
-            VER=$(cat /etc/rocky-release|awk '{print $4}')
-        elif [ -f /etc/redhat-release ]; then
-            # Older Red Hat, CentOS, etc.
-            OS=RedHat
-            VER=$(cat /etc/redhat-release)
-        else
-            # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
-            OS=$(uname -s)
-            VER=$(uname -r)
-        fi
+    echo "${Green}Checking system...${Reset}"
+    MACHINE=$(uname -m)
+    # 测试支持的Linux发行版，及其包管理器（package manager）
+    if [[ -f /etc/redhat-release ]]; then
+        $OS="centos"
+        $PKM="yum"
+    elif grep -Eqi "debian|raspbian" /etc/issue; then
+        $OS="debian"
+        $PKM="apt"
+    elif grep -Eqi "ubuntu" /etc/issue; then
+        $OS="ubuntu"
+        $PKM="apt"
+    elif grep -Eqi "centos|red hat|redhat" /etc/issue; then
+        $OS="centos"
+        $PKM="yum"
+    elif grep -Eqi "debian|raspbian" /proc/version; then
+        $OS="debian"
+        $PKM="apt"
+    elif grep -Eqi "ubuntu" /proc/version; then
+        $OS="ubuntu"
+        $PKM="apt"
+    elif grep -Eqi "centos|red hat|redhat" /proc/version; then
+        $OS="centos"
+        $PKM="yum"
+    else
+        echo "${Red}This script is not supported by your system!${Reset}"
+        exit 1
     fi
 }
+
 
 # 生成配置文件
 
 # 安装必要组件
 install_pack() {
-    systemPackage install git
+    PKM install git
 }
 
 # 下载组件
