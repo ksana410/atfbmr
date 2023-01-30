@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+#This is a script to install sing-box, shadow-tls, verysimple
+#Version: v0.1
 
 if [[ $EUID -ne 0 ]]; then
     clear
