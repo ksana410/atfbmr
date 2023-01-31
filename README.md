@@ -1,6 +1,6 @@
 # atfbmr
 
-A Tool For Building My Router
+A Tool For Building My Router with Linux distributions
 
 ---
 
@@ -18,10 +18,9 @@ A Tool For Building My Router
 
 ## 构成组件
 
-* v2ray
-* iptables
-* ipset
+* v2ray/sing-box/very_simple/shadow-tls
+* iptables/nftables
 * dnsmasq
-* dnsproxy
+* dnscrypt-proxy
 
 ## 感谢以下开源项目对本工具的支持

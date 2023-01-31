@@ -8,7 +8,10 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-timedatectl set-timezone Asia/Shanghai
+
+default_uuid=$(cat /proc/sys/kernel/random/uuid)
+default_path=$(cat /dev/urandom | head -1 | md5sum | head -c 6)
+#timedatectl set-timezone Asia/Shanghai
 v2path=$(cat /dev/urandom | head -1 | md5sum | head -c 6)
 v2uuid=$(cat /proc/sys/kernel/random/uuid)
 
