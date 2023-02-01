@@ -10,6 +10,24 @@
 
 # Version: 0.0.1 20200114
 # *创建日期，初始编写
+# This script is used to build the Linux NAT system.
+# It is used to build the system for the following linux distributions:
+#  - Debian
+#  - Alpine
+# It uses interactive mode to set up the network, transparent proxy and some other features.
+# 执行流程——识别系统信息，包括网口数量，架构，操作系统版本——使用交互模式对系统进行配置，指定网口类型，是否需要使用单臂模式，是否开启vlan，内网网段，上网模式，是否需要开启透明
+# 代理——
+# 交互方式询问用户如何进行下一步操作
+# 安装模式：普通路由模式，旁路模式，单臂路由模式
+# 是否需要启用VLAN：默认不启用，单臂模式则必须启动
+# 按需选择不同网卡的作用，WAN口，LAN口，如果用户通过SSH登陆，则优先将所连接网卡设置成LAN口
+# 是否需要启用IPv6：默认不启用，如果需要，则需要安装ip6tables或者ebtables
+# 是否需要启用VPN：默认不启用，如果需要，则需要安装wireguard
+# 防火墙模式选择：优先基于系统所安装版本进行设置，当然也可以使用用户选择进行操作，现在支持iptables,firewalld,nftables
+# 不同发行版的防火墙启动方式不同，如果是debian系，则需要手动安装对应的启动服务iptables-persistent
+# 如果是centos系，则只需要开启firewalld服务即可
+# 询问是否需要开启科学上网功能，现有支持v2ray和clash作为透明代理使用，使用个人节点还是订阅，如果需要订阅的话暂时只能使用clash进行操作
+# 所有配置结束之后进行最后的安装，依赖安装，之后进行设置，防火墙设置，科学上网设置，VPN设置，最后进行服务启动
 
 # 前期安装说明，为了减少冲突，建议使用纯净安装后的Linux发行版作为母体系统进行安装
 echo "${Yellow}################################################################${Reset}"
@@ -57,7 +75,7 @@ Reset=$(tput sgr0)
 packageList=(dnsmasq wget curl unzip)
 
 # 检测是否是Root用户
-if [[ $(id -u) != "0" ]]; then
+if [[ $(id -u) -ne "0" ]]; then
     printf "\e[42m\e[31m Error: You must be root to run this install script.\e[0m\n"
     exit 1
 fi
