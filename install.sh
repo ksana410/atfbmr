@@ -130,3 +130,32 @@ install_pack() {
 # 选择需要实现的功能
 
 # 添加防火墙规则
+
+# 主控制菜单
+main_Menu() {
+    colorEcho green "1. 配置NAT"
+    colorEcho green "2. 开启透明代理"
+    colorEcho green "3. 卸载配置"
+    colorEcho green "4. 退出"
+    read -p "请输入选项：" installType
+    case $installType in
+        1)
+            colorEcho green "Building NAT system for Linux"
+            natConfig
+            ;;
+        2)
+            transproxyConfig
+            ;;
+        3)
+            uninstall
+            ;;
+        4)  
+            colorEcho yellow "Bye!"
+            exit 0
+            ;;
+        *)
+            colorEcho red "选项错误，请重新输入"
+            mainMenu
+            ;;
+    esac
+}
