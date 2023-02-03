@@ -117,6 +117,23 @@ sysCheck(){
     fi
 }
 
+# 安装前检测
+installPrecheck(){
+    echo "${Yellow}################################${Reset}"
+    echo "${Yellow}#                              #${Reset}"
+    echo "${Yellow}# Pre-installation testing     #${Reset}"
+    echo "${Yellow}#                              #${Reset}"
+    echo "${Yellow}################################${Reset}"
+
+    sleep 3
+    isPort=`ss -tunlp | grep -Eq ":80 |:443"`
+    if [[ "${isPort}" != '' ]]; then
+        echo "${Red} Port is occupied! ${Reset}"
+        exit 1
+    fi
+
+}
+
 
 # 生成配置文件
 
