@@ -131,9 +131,21 @@ installPrecheck(){
         echo "${Red} Port is occupied! ${Reset}"
         exit 1
     fi
-
 }
 
+# 安装ShadowTls
+install_shadowTls() {  
+}
+
+# 安装sing-box
+install_singBox() {
+}
+
+# 安装verysimple
+install_verysimple() {
+}
+
+# 环境变量配置
 
 # 生成配置文件
 
