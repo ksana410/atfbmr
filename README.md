@@ -18,9 +18,11 @@ A Tool For Building My Router with Linux distributions
 
 ## 构成组件
 
-* v2ray/sing-box/very_simple/shadow-tls
+* v2ray/sing-box
 * iptables/nftables
 * dnsmasq
 * dnscrypt-proxy
+* wireguard
+* ocserv
 
 ## 感谢以下开源项目对本工具的支持
