@@ -14,6 +14,8 @@
 # It is used to build the system for the following linux distributions:
 #  - Debian
 #  - Alpine
+#  - Ubuntu
+#  - CentOS
 # It uses interactive mode to set up the network, transparent proxy and some other features.
 # 执行流程——识别系统信息，包括网口数量，架构，操作系统版本——使用交互模式对系统进行配置，指定网口类型，是否需要使用单臂模式，是否开启vlan，内网网段，上网模式，是否需要开启透明
 # 代理——

@@ -3,6 +3,7 @@
 # This is a shell script for configuare iptables rule
 # It can build a Linux router with iptables and give you a router can over the wall
 
+# 常见的 C 类地址
 ipv4_privaty_ipadds=(
     0.0.0.0/8
     10.0.0.0/8
@@ -15,4 +16,8 @@ ipv4_privaty_ipadds=(
     240.0.0.0/4    
 )
 
-
+# 常用的 DNS 地址
+ipv4_dns_ipadds=(
+    8.8.8.8
+    8.8.4.4
+)
